@@ -15,6 +15,11 @@ public class UserManager {
         loadUsers();
     }
 
+    public void clearUsers() {
+        users.clear();
+        saveUsers();
+    }
+
     private void loadUsers() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(USER_DATA_PATH))) {
             users = (List<User>) ois.readObject();
