@@ -32,6 +32,14 @@ public class Message implements Serializable {
         return content;
     }
 
+    public Boolean getIsBroadcast() {
+        return isBroadcast;
+    }
+
+    public Boolean getIsAnonymous() {
+        return isAnonymous;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
