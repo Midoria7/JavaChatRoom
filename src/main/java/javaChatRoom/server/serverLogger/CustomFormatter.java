@@ -6,11 +6,6 @@ import java.util.logging.LogRecord;
 public class CustomFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
-//        return String.format("%1$s %2$tF %2$tT %3$s: %4$s %n",
-//                record.getLevel().getLocalizedName(),
-//                new java.util.Date(record.getMillis()),
-//                record.getSourceClassName() + " " + record.getSourceMethodName(),
-//                record.getMessage());
         return String.format("[%1$s] %2$tF %2$tT %3$s: %4$s %n",
                 getLeverName(record.getLevel().getName()),
                 new java.util.Date(record.getMillis()),

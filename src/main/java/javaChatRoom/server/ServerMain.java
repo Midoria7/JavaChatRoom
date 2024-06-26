@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javaChatRoom.server.clientHandler.ClientHandler;
 import javaChatRoom.server.userManager.UserManager;
@@ -88,6 +90,10 @@ public class ServerMain {
         userManager.getOnlineUsernames().forEach(ServerLogger::writeInfo);
     }
 
+    public List<String> getOnlineUsers() {
+        return userManager.getOnlineUsernames();
+    }
+
     private void listAllUsers() {
         if (userManager.getAllUsernames().isEmpty()) {
             ServerLogger.writeInfo("No users registered.");
@@ -96,7 +102,11 @@ public class ServerMain {
         userManager.getAllUsernames().forEach(ServerLogger::writeInfo);
     }
 
-    private void stopServer() {
+    public List<String> getAllUsers() {
+        return userManager.getAllUsernames();
+    }
+
+    public void stopServer() {
         ServerLogger.writeInfo("Shutting down server...");
         running = false;
         stop();
