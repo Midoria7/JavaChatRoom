@@ -1,4 +1,5 @@
 package javaChatRoom.server.serverLogger;
+
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -11,16 +12,17 @@ public class ServerLogger {
 
     private static void setupLoggers() {
         LOGGER.setUseParentHandlers(false);
+        CustomFormatter customFormatter = new CustomFormatter();
 
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(Level.FINE);
-        consoleHandler.setFormatter(new SimpleFormatter());
+        consoleHandler.setFormatter(customFormatter);
 
         FileHandler fileHandler = null;
         try {
             fileHandler = new FileHandler("server.log", true);
             fileHandler.setLevel(Level.INFO);
-            fileHandler.setFormatter(new SimpleFormatter());
+            fileHandler.setFormatter(customFormatter);
         } catch (SecurityException | IOException e) {
             LOGGER.log(Level.SEVERE, "File logger not working.", e);
         }
@@ -34,18 +36,22 @@ public class ServerLogger {
     }
 
     public static void writeInfo(String message) {
-        LOGGER.info(message);
+        LOGGER.logp(Level.INFO, getCallerClassName(), "", message);
     }
 
     public static void writeWarning(String message) {
-        LOGGER.warning(message);
+        LOGGER.logp(Level.WARNING, getCallerClassName(), "", message);
     }
 
     public static void writeError(String message) {
-        LOGGER.severe(message);
+        LOGGER.logp(Level.SEVERE, getCallerClassName(), "", message);
     }
 
     public static void writeDebug(String message) {
-        LOGGER.fine(message);
+        LOGGER.logp(Level.FINE, getCallerClassName(), "", message);
+    }
+
+    private static String getCallerClassName() {
+        return new Throwable().getStackTrace()[2].getClassName();
     }
 }
