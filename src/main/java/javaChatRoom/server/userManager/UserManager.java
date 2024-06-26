@@ -95,4 +95,10 @@ public class UserManager {
     public synchronized List<String> getOnlineUsernames() {
         return new ArrayList<>(onlineUsers);
     }
+
+    public synchronized List<String> getAllUsernames() {
+        return users.stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+    }
 }

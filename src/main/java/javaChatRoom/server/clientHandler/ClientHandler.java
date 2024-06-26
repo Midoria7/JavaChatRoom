@@ -6,6 +6,7 @@ import javaChatRoom.server.userManager.UserManager;
 import javaChatRoom.common.communicationManager.CommunicationManager;
 import javaChatRoom.server.serverLogger.ServerLogger;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
@@ -27,8 +28,11 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-            while (!socket.isClosed()) {
+            while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
                 Object obj = commManager.receiveObject();
+                if (obj == null) {
+                    break;
+                }
                 if (obj instanceof Message) {
                     handleMessage((Message) obj);
                 } else if (obj instanceof Command) {
@@ -41,6 +45,7 @@ public class ClientHandler extends Thread {
             commManager.close();
         }
     }
+
 
     private void handleMessage(Message message) {
         if (message.getIsBroadcast()) {
@@ -94,5 +99,16 @@ public class ClientHandler extends Thread {
     private void sendUserList() {
         List<String> onlineUsers = userManager.getOnlineUsernames();
         commManager.sendObject(onlineUsers);
+    }
+
+    public void closeConnection() {
+        try {
+            interrupt();  // 中断线程
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            ServerLogger.writeError("Error closing client socket: " + e.getMessage());
+        }
     }
 }
