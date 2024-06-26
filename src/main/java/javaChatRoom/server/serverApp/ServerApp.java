@@ -2,6 +2,7 @@ package javaChatRoom.server.serverApp;
 
 import javaChatRoom.server.ServerMain;
 import javaChatRoom.server.serverLogger.ServerLogger;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class ServerApp extends JFrame {
     }
 
     private void createUI() {
-        logArea = new JTextArea(20, 70);
+        logArea = new JTextArea(22, 70);
         logArea.setEditable(false);
 
         ServerLogger.setLogArea(logArea);  // Set the log area for ServerLogger
@@ -30,11 +31,11 @@ public class ServerApp extends JFrame {
         showAllUsersButton = new JButton("Show All Users");
 
         JPanel panel = new JPanel();
+        panel.add(new JScrollPane(logArea));
         panel.add(startButton);
         panel.add(stopButton);
         panel.add(showOnlineUsersButton);
         panel.add(showAllUsersButton);
-        panel.add(new JScrollPane(logArea));
 
         addEventHandlers();
         add(panel);
@@ -74,19 +75,21 @@ public class ServerApp extends JFrame {
         if (users.isEmpty()) {
             userList.setListData(new String[]{"No users"});
         }
-        frame.add(new JScrollPane(userList));
-        frame.pack();
+        JScrollPane scrollPane = new JScrollPane(userList);
+        scrollPane.setPreferredSize(new Dimension(300, 200)); // 设置滚动面板的首选大小
+        frame.add(scrollPane);
+        frame.pack(); // 调整窗口大小以适应组件的首选大小
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
+
     public static void main(String[] args) {
         try {
+//            UIManager.setLookAndFeel(new FlatLightLaf());
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            ServerLogger.writeError("Error setting look and feel: " + e.getMessage());
         }
         EventQueue.invokeLater(() -> {
             ServerApp frame = new ServerApp();
