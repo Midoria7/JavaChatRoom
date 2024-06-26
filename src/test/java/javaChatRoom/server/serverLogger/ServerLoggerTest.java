@@ -1,7 +1,6 @@
 package javaChatRoom.server.serverLogger;
 
 import org.junit.jupiter.api.Test;
-import java.util.logging.*;
 
 public class ServerLoggerTest {
 
