@@ -8,10 +8,12 @@ import javaChatRoom.server.serverLogger.ServerLogger;
 
 public class UserManager {
     private List<User> users;
+    private List<User> onlineUsers;
     private static final String USER_DATA_PATH = "user.ser";
 
     public UserManager() {
         users = new ArrayList<>();
+        onlineUsers = new ArrayList<>();
         loadUsers();
     }
 
@@ -49,5 +51,19 @@ public class UserManager {
         } catch (IOException e) {
             ServerLogger.writeError("Error saving users: " + e.getMessage());
         }
+    }
+
+    public void userLoggedIn(User user) {
+        if (!onlineUsers.contains(user)) {
+            onlineUsers.add(user);
+        }
+    }
+
+    public void userLoggedOut(User user) {
+        onlineUsers.remove(user);
+    }
+
+    public List<User> getOnlineUsers() {
+        return new ArrayList<>(onlineUsers);
     }
 }
