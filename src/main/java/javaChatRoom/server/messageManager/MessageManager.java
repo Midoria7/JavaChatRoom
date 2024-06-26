@@ -3,6 +3,8 @@ package javaChatRoom.server.messageManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javaChatRoom.common.message.Message;
 import javaChatRoom.server.serverLogger.ServerLogger;
 
 public class MessageManager {
