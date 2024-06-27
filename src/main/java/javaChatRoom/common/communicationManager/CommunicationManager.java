@@ -4,6 +4,7 @@ import javaChatRoom.server.serverLogger.ServerLogger;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class CommunicationManager {
     private final Socket socket;
@@ -28,7 +29,10 @@ public class CommunicationManager {
     public Object receiveObject() {
         try {
             return inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (SocketException e){
+            System.exit(0);
+            return null;
+        }  catch (IOException | ClassNotFoundException e) {
             ServerLogger.writeError("Error receiving object: " + e.getMessage());
             return null;
         }
