@@ -21,12 +21,11 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="8ffa0" class="javax.swing.JTextArea" binding="messageTextArea">
+          <component id="5dd44" class="javax.swing.JTextPane" binding="messageTextPane">
             <constraints/>
             <properties>
               <editable value="false"/>
               <font name="Consolas" size="16" style="0"/>
-              <text value=""/>
             </properties>
           </component>
         </children>

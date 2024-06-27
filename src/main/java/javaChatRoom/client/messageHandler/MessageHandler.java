@@ -24,9 +24,9 @@ public class MessageHandler {
     }
 
     public void startHandling() {
-        chatView.displayMessage("Welcome to the chat room! You are logged in as " + config.getUsername() + ".");
-        chatView.displayMessage("Enter messages to send, or use @@<command> to perform actions.");
-        chatView.displayMessage("Type @@help for a list of available commands.");
+        chatView.displayMessage("Welcome to the chat room! You are logged in as " + config.getUsername() + ".", 1);
+        chatView.displayMessage("Enter messages to send, or use @@<command> to perform actions.", 1);
+        chatView.displayMessage("Type @@help for a list of available commands.", 1);
         new Thread(() -> {
             try {
                 while (true) {
@@ -36,7 +36,7 @@ public class MessageHandler {
                     }
                 }
             } catch (Exception e) {
-                chatView.displayMessage("Error handling messages: " + e.getMessage());
+                chatView.displayMessage("Error handling messages: " + e.getMessage(), 4);
             }
         }).start();
     }
@@ -55,7 +55,7 @@ public class MessageHandler {
         Message message = new Message(config.getUsername(), "ALL", messageText, true, config.isAnonymous());
         connection.send(message);
         String displayText = formatMessageDisplay(config.getUsername(), "ALL", messageText);
-        chatView.displayMessage(displayText);
+        chatView.displayMessage(displayText, 2);
     }
 
     private void sendPrivateMessage(String messageText) {
@@ -65,7 +65,7 @@ public class MessageHandler {
             String message = parts[1];
             connection.send(new Message(config.getUsername(), receiver, message, false, config.isAnonymous()));
             String displayText = formatMessageDisplay(config.getUsername(), receiver, message);
-            chatView.displayMessage(displayText);
+            chatView.displayMessage(displayText, 2);
         }
     }
 
@@ -80,21 +80,21 @@ public class MessageHandler {
                 break;
             case "anonymous":
                 config.setAnonymous(!config.isAnonymous());
-                chatView.displayMessage("Anonymous mode: " + (config.isAnonymous() ? "Enabled" : "Disabled"));
+                chatView.displayMessage("Anonymous mode: " + (config.isAnonymous() ? "Enabled" : "Disabled"), 1);
                 break;
             case "showanonymous":
-                chatView.displayMessage("Current anonymous mode: " + (config.isAnonymous() ? "Enabled" : "Disabled"));
+                chatView.displayMessage("Current anonymous mode: " + (config.isAnonymous() ? "Enabled" : "Disabled"), 1);
                 break;
             case "help":
-                chatView.displayMessage("Available commands: quit, list, anonymous, showanonymous, help");
-                chatView.displayMessage("@@quit: Exit the chat room.");
-                chatView.displayMessage("@@list: List all online users.");
-                chatView.displayMessage("@@anonymous: Toggle anonymous mode.");
-                chatView.displayMessage("@@showanonymous: Show current anonymous mode.");
-                chatView.displayMessage("@@help: Show this help message.");
+                chatView.displayMessage("Available commands: quit, list, anonymous, showanonymous, help", 1);
+                chatView.displayMessage("@@quit: Exit the chat room.", 1);
+                chatView.displayMessage("@@list: List all online users.", 1);
+                chatView.displayMessage("@@anonymous: Toggle anonymous mode.", 1);
+                chatView.displayMessage("@@showanonymous: Show current anonymous mode.", 1);
+                chatView.displayMessage("@@help: Show this help message.", 1);
                 break;
             default:
-                chatView.displayMessage("Invalid command.");
+                chatView.displayMessage("Invalid command.", 4);
                 break;
         }
     }
@@ -103,19 +103,19 @@ public class MessageHandler {
         if (message instanceof Message) {
             Message msg = (Message) message;
             String displayText = formatMessageDisplay(msg.getSender(), msg.getReceiver(), msg.getContent());
-            chatView.displayMessage(displayText);
+            chatView.displayMessage(displayText, msg.getReceiver().equals(config.getUsername()) ? 3 : 0);
         } else if (message instanceof Command) {
             Command command = (Command) message;
-            chatView.displayMessage("Server: " + command.getArgs()[0]);
+            chatView.displayMessage("Server: " + command.getArgs()[0], 4);
         } else if (message instanceof List<?>) {
             List<String> users = (List<String>) message;
-            chatView.displayMessage("Users online: " + String.join(", ", users));
+            chatView.displayMessage("Users online: " + String.join(", ", users), 1);
         }
     }
 
     private String formatMessageDisplay(String sender, String receiver, String content) {
         String displayName = config.isAnonymous() && sender.equals(config.getUsername()) ? "ANONYMOUS" : sender;
         return "[" + new Date() + "][" + displayName + (displayName.equals(config.getUsername()) ? "(You)" : "")
-                + (receiver.equals("ALL") ? "" : (" -> " + receiver + (receiver.equals(config.getUsername()) ? "(You)" : ""))) + "] " + content;
+                + (receiver.equals("ALL") ? "" : (" -> " + receiver + (receiver.equals(config.getUsername()) ? "(You)" : ""))) + "]" + "\n" +  content;
     }
 }
