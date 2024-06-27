@@ -29,11 +29,8 @@ public class CommunicationManager {
     public Object receiveObject() {
         try {
             return inputStream.readObject();
-        } catch (SocketException e){
+        } catch (Exception e){
             System.exit(0);
-            return null;
-        }  catch (IOException | ClassNotFoundException e) {
-            ServerLogger.writeError("Error receiving object: " + e.getMessage());
             return null;
         }
     }

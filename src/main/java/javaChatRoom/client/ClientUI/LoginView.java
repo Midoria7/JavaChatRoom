@@ -48,15 +48,17 @@ public class LoginView extends JFrame{
 
                 if (loginHandler.performLogin()) {
                     dispose(); // Close the login window
+                    ChatView chatView = new ChatView();
                     MessageHandler messageHandler = new MessageHandler(connection, config);
+                    chatView.setMessageHandler(messageHandler);
+                    messageHandler.setChatView(chatView);
+                    chatView.setVisible(true);
                     messageHandler.startHandling(); // Start handling messages
                 } else {
                     JOptionPane.showMessageDialog(LoginView.this, "Login failed, please try again.", "Login Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
-
 
         setContentPane(chatRoomLoginPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

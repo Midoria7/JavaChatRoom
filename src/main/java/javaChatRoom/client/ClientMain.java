@@ -1,13 +1,14 @@
 package javaChatRoom.client;
 
-import javaChatRoom.client.ClientUI.LoginUI;
 import javaChatRoom.client.ClientUI.LoginView;
+import javaChatRoom.client.clientConfig.ClientConfig;
+import javaChatRoom.client.clientConnection.ClientConnection;
 
 import javax.swing.*;
 
 public class ClientMain {
 
-    public static void main(String[] args) {
+    void start(){
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -17,5 +18,9 @@ public class ClientMain {
         SwingUtilities.invokeLater(() -> {
             new LoginView();
         });
+    }
+
+    public static void main(String[] args) {
+        new ClientMain().start();
     }
 }
