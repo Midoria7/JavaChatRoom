@@ -24,8 +24,9 @@ public class MessageHandler {
     }
 
     public void startHandling() {
-        chatView.displayMessage("Welcome to the chat room!");
+        chatView.displayMessage("Welcome to the chat room! You are logged in as " + config.getUsername() + ".");
         chatView.displayMessage("Enter messages to send, or use @@<command> to perform actions.");
+        chatView.displayMessage("Type @@help for a list of available commands.");
         new Thread(() -> {
             try {
                 while (true) {
@@ -69,7 +70,7 @@ public class MessageHandler {
     }
 
     private void handleCommand(String command) {
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "quit":
                 connection.send(new Command(Command.CommandType.QUIT));
                 System.exit(0);
@@ -83,6 +84,14 @@ public class MessageHandler {
                 break;
             case "showanonymous":
                 chatView.displayMessage("Current anonymous mode: " + (config.isAnonymous() ? "Enabled" : "Disabled"));
+                break;
+            case "help":
+                chatView.displayMessage("Available commands: quit, list, anonymous, showanonymous, help");
+                chatView.displayMessage("@@quit: Exit the chat room.");
+                chatView.displayMessage("@@list: List all online users.");
+                chatView.displayMessage("@@anonymous: Toggle anonymous mode.");
+                chatView.displayMessage("@@showanonymous: Show current anonymous mode.");
+                chatView.displayMessage("@@help: Show this help message.");
                 break;
             default:
                 chatView.displayMessage("Invalid command.");

@@ -5,6 +5,8 @@ import javaChatRoom.client.messageHandler.MessageHandler;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 
 public class ChatView extends JFrame {
@@ -18,10 +20,27 @@ public class ChatView extends JFrame {
     public ChatView() {
         super("ChatView");
         setContentPane(chatWindowPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                performCloseOperation();
+            }
+        });
         pack();
         setVisible(true);
         sendButton.addActionListener(this::sendMessage);
+    }
+
+    private void performCloseOperation() {
+        int confirmed = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to log out?", "User Confirmation",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmed == JOptionPane.YES_OPTION) {
+            messageHandler.sendMessage("@@quit");
+            dispose();
+        }
     }
 
     public void setMessageHandler(MessageHandler messageHandler) {
