@@ -1,8 +1,7 @@
 package javaChatRoom.server.serverApp;
 
-import javaChatRoom.server.ServerMain;
+import javaChatRoom.server.serverController.ServerController;
 import javaChatRoom.server.serverLogger.ServerLogger;
-import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +9,7 @@ import java.awt.*;
 public class ServerApp extends JFrame {
     private JButton startButton, stopButton, showOnlineUsersButton, showAllUsersButton;
     private JTextArea logArea;
-    private ServerMain serverMain;
+    private ServerController serverController;
 
     public ServerApp() {
         createUI();
@@ -51,20 +50,20 @@ public class ServerApp extends JFrame {
     private void startServer() {
         logArea.append("Starting server...\n");
         new Thread(() -> {
-            serverMain = new ServerMain(12345);
-            serverMain.start();
+            serverController = new ServerController(12345);
+            serverController.start();
         }).start();
     }
 
     private void stopServer() {
-        if (serverMain != null) {
-            serverMain.stopServer();
+        if (serverController != null) {
+            serverController.stopServer();
             logArea.append("Server stopped.\n");
         }
     }
 
     private void displayUserList(boolean online) {
-        java.util.List<String> users = online ? serverMain.getOnlineUsers() : serverMain.getAllUsers();
+        java.util.List<String> users = online ? serverController.getOnlineUsers() : serverController.getAllUsers();
         SwingUtilities.invokeLater(() -> createUserListWindow(users, online ? "Online Users" : "All Users"));
     }
 
@@ -84,21 +83,5 @@ public class ServerApp extends JFrame {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-
-
-    public static void main(String[] args) {
-        try {
-//            UIManager.setLookAndFeel(new FlatLightLaf());
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            ServerLogger.writeError("Error setting look and feel: " + e.getMessage());
-        }
-        EventQueue.invokeLater(() -> {
-            ServerApp frame = new ServerApp();
-            frame.setVisible(true);
-            frame.setTitle("Server");
-        });
     }
 }

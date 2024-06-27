@@ -1,8 +1,6 @@
 package javaChatRoom.client;
 
 import javaChatRoom.client.ClientUI.LoginView;
-import javaChatRoom.client.clientConfig.ClientConfig;
-import javaChatRoom.client.clientConnection.ClientConnection;
 
 import javax.swing.*;
 
