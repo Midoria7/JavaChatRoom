@@ -55,7 +55,7 @@ public class ClientHandler extends Thread {
             if (userManager.getOnlineUsernames().contains(message.getReceiver())) {
                 sendMessage(message, message.getReceiver());
             } else {
-                commManager.sendObject(new Command(Command.CommandType.ERROR, "User not online"));
+                commManager.sendObject(new Command(Command.CommandType.ERROR, "User not online, your message was actually not sent."));
             }
         }
     }
@@ -84,7 +84,7 @@ public class ClientHandler extends Thread {
         } else if (command.getCommandType() == Command.CommandType.LOGINREQUEST) {
             String username = command.getArgs()[0];
             String password = command.getArgs()[1];
-            if (userManager.isValidUser(username, password)) {
+            if (userManager.isValidUser(username, password) && !userManager.getOnlineUsernames().contains(username)) {
                 userManager.userLogIn(username, this);
                 connectedUserName = username;
                 ServerLogger.writeInfo("User " + username + " logged in, IP: " + socket.getInetAddress());

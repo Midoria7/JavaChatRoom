@@ -60,9 +60,15 @@ public class MessageHandler {
 
     private void sendPrivateMessage(String messageText) {
         String[] parts = messageText.split(" ", 2);
-        if (parts.length > 1) {
+        if (parts.length > 1 && !parts[1].isEmpty()) {
             String receiver = parts[0].substring(1);
             String message = parts[1];
+            connection.send(new Message(config.getUsername(), receiver, message, false, config.isAnonymous()));
+            String displayText = formatMessageDisplay(config.getUsername(), receiver, message);
+            chatView.displayMessage(displayText, 2);
+        } else {
+            String receiver = parts[0].substring(1);
+            String message = "###(He/She sent you a blank message)###";
             connection.send(new Message(config.getUsername(), receiver, message, false, config.isAnonymous()));
             String displayText = formatMessageDisplay(config.getUsername(), receiver, message);
             chatView.displayMessage(displayText, 2);
@@ -92,6 +98,7 @@ public class MessageHandler {
                 chatView.displayMessage("@@anonymous: Toggle anonymous mode.", 1);
                 chatView.displayMessage("@@showanonymous: Show current anonymous mode.", 1);
                 chatView.displayMessage("@@help: Show this help message.", 1);
+                chatView.displayMessage("@<username> <message>: Send a private message to a user.", 1);
                 break;
             default:
                 chatView.displayMessage("Invalid command.", 4);
