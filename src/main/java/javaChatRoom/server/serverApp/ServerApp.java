@@ -75,13 +75,17 @@ public class ServerApp extends JFrame {
         if (users.isEmpty()) {
             userList.setListData(new String[]{"No users"});
         }
+
+        userList.setCellRenderer(new UserListCellRenderer()); // 应用自定义渲染器
+
         JScrollPane scrollPane = new JScrollPane(userList);
-        scrollPane.setPreferredSize(new Dimension(300, 200)); // 设置滚动面板的首选大小
+        scrollPane.setPreferredSize(new Dimension(300, 400));
         frame.add(scrollPane);
-        frame.pack(); // 调整窗口大小以适应组件的首选大小
+        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
 
 
     public static void main(String[] args) {
