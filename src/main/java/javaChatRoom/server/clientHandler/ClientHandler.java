@@ -14,6 +14,7 @@ public class ClientHandler extends Thread {
     private Socket socket;
     private UserManager userManager;
     private CommunicationManager commManager;
+    private String connectedUserName;
 
     public ClientHandler(Socket socket, UserManager userManager) {
         this.socket = socket;
@@ -51,7 +52,11 @@ public class ClientHandler extends Thread {
         if (message.getIsBroadcast()) {
             broadcastMessage(message);
         } else {
-            sendMessage(message, message.getReceiver());
+            if (userManager.getOnlineUsernames().contains(message.getReceiver())) {
+                sendMessage(message, message.getReceiver());
+            } else {
+                commManager.sendObject(new Command(Command.CommandType.ERROR, "User not online"));
+            }
         }
     }
 
@@ -81,8 +86,11 @@ public class ClientHandler extends Thread {
             String password = command.getArgs()[1];
             if (userManager.isValidUser(username, password)) {
                 userManager.userLogIn(username, this);
+                connectedUserName = username;
+                ServerLogger.writeInfo("User " + username + " logged in, IP: " + socket.getInetAddress());
                 commManager.sendObject(new Command(Command.CommandType.LOGINRESPONSE, "SUCCESS"));
             } else {
+                ServerLogger.writeWarning("An invalid login attempt was made. IP: " + socket.getInetAddress());
                 commManager.sendObject(new Command(Command.CommandType.LOGINRESPONSE, "FAILURE"));
             }
         } else if (command.getCommandType() == Command.CommandType.REGISTERREQUEST) {
@@ -95,6 +103,7 @@ public class ClientHandler extends Thread {
             }
         } else if (command.getCommandType() == Command.CommandType.QUIT) {
             userManager.userLoggedOut(this);
+            ServerLogger.writeInfo("User " + connectedUserName + " logged out, IP: " + socket.getInetAddress());
             commManager.close();
         }
     }

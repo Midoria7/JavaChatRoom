@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Command implements Serializable {
     public enum CommandType {
-        USERLIST, QUIT, REGISTERREQUEST, REGISTERRESPONSE, LOGINREQUEST, LOGINRESPONSE
+        USERLIST, QUIT, REGISTERREQUEST, REGISTERRESPONSE, LOGINREQUEST, LOGINRESPONSE, ERROR
     }
     private final String[] args;
     private final CommandType commandType;

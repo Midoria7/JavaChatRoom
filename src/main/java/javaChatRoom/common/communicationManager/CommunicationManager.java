@@ -49,4 +49,8 @@ public class CommunicationManager {
             ServerLogger.writeError("Error closing connections: " + e.getMessage());
         }
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
 }
