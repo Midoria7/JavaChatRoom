@@ -65,9 +65,12 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void sendMessage(Message message, String sender) {
-        Message outgoingMessage = new Message(sender, message.getReceiver(), message.getContent(), message.getIsBroadcast(), message.getIsAnonymous());
-        commManager.sendObject(outgoingMessage);
+    private void sendMessage(Message message, String receiver) {
+        ClientHandler client = userManager.getClientHandler(receiver);
+        if (client != null) {
+            String sender = message.getIsAnonymous() ? "ANONYMOUS" : message.getSender();
+            client.commManager.sendObject(new Message(sender, message.getReceiver(), message.getContent(), false, message.getIsAnonymous()));
+        }
     }
 
     private void handleCommand(Command command) {

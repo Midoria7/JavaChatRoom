@@ -101,4 +101,8 @@ public class UserManager {
                 .map(User::getUsername)
                 .collect(Collectors.toList());
     }
+
+    public synchronized ClientHandler getClientHandler(String username) {
+        return userConnections.get(username);
+    }
 }
