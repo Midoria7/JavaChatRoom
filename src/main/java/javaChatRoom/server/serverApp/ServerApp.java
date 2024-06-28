@@ -70,12 +70,14 @@ public class ServerApp extends JFrame {
     private void createUserListWindow(java.util.List<String> users, String title) {
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         JList<String> userList = new JList<>(users.toArray(new String[0]));
-        if (users.isEmpty()) {
+        boolean isEmpty = users.isEmpty();
+        if (isEmpty) {
             userList.setListData(new String[]{"No users"});
         }
 
-        userList.setCellRenderer(new UserListCellRenderer()); // 应用自定义渲染器
+        userList.setCellRenderer(new UserListCellRenderer(isEmpty)); // 传递标志
 
         JScrollPane scrollPane = new JScrollPane(userList);
         scrollPane.setPreferredSize(new Dimension(300, 400));

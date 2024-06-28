@@ -3,6 +3,7 @@ package javaChatRoom.client.ClientUI;
 import javaChatRoom.client.clientConfig.ClientConfig;
 import javaChatRoom.client.clientConnection.ClientConnection;
 import javaChatRoom.client.loginHandler.LoginHandler;
+import javaChatRoom.client.loginHandler.RegisterHandler;
 import javaChatRoom.client.messageHandler.MessageHandler;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class LoginView extends JFrame{
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JPasswordField passwordField;
+    private JButton registerButton;
 
     public LoginView() {
 
@@ -60,6 +62,34 @@ public class LoginView extends JFrame{
             }
         });
 
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String serverAddress = serverAddressField.getText();
+                int serverPort = Integer.parseInt(serverPortField.getText());
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+
+                // Connect and perform register
+                ClientConnection connection = new ClientConnection(serverAddress, serverPort);
+                ClientConfig config = new ClientConfig();
+                try {
+                    connection.connect();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(LoginView.this, "Failed to connect to server.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                RegisterHandler registerHandler = new RegisterHandler(connection, config, username, password);
+
+                if (registerHandler.performRegister()) {
+                    JOptionPane.showMessageDialog(LoginView.this, "Register successful.", "Register Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(LoginView.this, "Register failed, please try again.", "Register Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
         setContentPane(chatRoomLoginPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
@@ -68,7 +98,7 @@ public class LoginView extends JFrame{
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("LoginView");
+        JFrame frame = new JFrame("Login");
         frame.setContentPane(new LoginView().chatRoomLoginPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
